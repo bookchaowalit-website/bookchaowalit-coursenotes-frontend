@@ -1,65 +1,40 @@
-import Link from "next/link";
 import { getAllCourseNotes } from "@/lib/mdx";
+import { NoteIndex } from "@/components/course-note-ui";
+import Link from "next/link";
 
 export default async function Home() {
   const notes = await getAllCourseNotes();
+  const topics = [...new Set(notes.map((note) => note.topic))];
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            My Course Notes
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            Organized learning notes from various courses and platforms
-          </p>
+    <main className="study-atlas">
+      <span className="contract-mark" dangerouslySetInnerHTML={{ __html: "<!-- THESIS: course notes are a learning archive, not generic cards; FINISH: topic index, chronological entries, readable note shelf -->" }} />
+      <div className="atlas-shell">
+        <header className="atlas-topbar">
+          <Link className="atlas-wordmark" href="/">FIELD NOTES / STUDY DESK</Link>
+          <span>private learning archive · {notes.length} entries</span>
+        </header>
+        <section className="atlas-hero">
+          <div className="hero-copy">
+            <h1>Keep the thread between classes.</h1>
+            <p>Course notes gathered as a working study archive: what was learned, where it came from, and which ideas are worth reopening.</p>
+          </div>
+          <aside className="atlas-card">
+            <span className="atlas-card-label">Current shelf</span>
+            <strong>{notes.length}</strong>
+            <span>notes indexed across<br />{topics.length} topics</span>
+          </aside>
+        </section>
+        <div className="atlas-content">
+          <aside className="topic-rail" aria-label="Topics">
+            <span className="rail-heading">Topic index</span>
+            {topics.map((topic) => <span className="topic-row" key={topic}><span>{topic}</span><span>{notes.filter((note) => note.topic === topic).length}</span></span>)}
+            <p className="rail-note">Each entry keeps its source course, platform, level, and date beside the notes.</p>
+          </aside>
+          <NoteIndex notes={notes.slice(0, 6)} title="Recent study" description="Start with the newest note, then follow a topic or course into the full shelf." />
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {notes.map((note) => (
-            <Link
-              key={note.slug}
-              href={`/course-notes/${note.slug}`}
-              className="block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow p-6"
-            >
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {note.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {note.course}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">
-                    {note.topic}
-                  </span>
-                  <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 rounded-full">
-                    {note.platform}
-                  </span>
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  <div>👤 {note.instructor}</div>
-                  <div>⏱️ {note.duration}</div>
-                  <div>📚 {note.level}</div>
-                  <div>📅 {note.date}</div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Link
-            href="/course-notes"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-          >
-            View All Notes
-          </Link>
-        </div>
-      </main>
-    </div>
+        <footer className="atlas-footer">The archive is local content in MDX. It does not claim a course completion record or replace the original source.</footer>
+      </div>
+    </main>
   );
 }
