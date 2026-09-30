@@ -42,3 +42,4 @@ searchable/filterable, MCP tools are real, and CI guards lint/types/tests/build.
     published as **2024-03-04**. The written calendar day is now kept.
   - Impossible dates rolled over (`2024-02-30` -> `2024-03-01`); now rejected.
   - Bare numbers were guessed by the engine (`"5"` -> 2001-05-01); now rejected.
+- Security deps: `next` 16.1.6 -> 16.3.8 (and `eslint-config-next`) clears critical GHSA-2xp9-vwfh-vxw4 (Image Optimization RCE) plus bundled postcss/sharp highs; lockfile regenerated with same-major `npm audit fix`. `npm audit --omit=dev`: C1/H4/M2/L0 [js-yaml:h,nanoid:h,next:c,postcss:h,sharp:h] -> C0/H0/M0/L0.
