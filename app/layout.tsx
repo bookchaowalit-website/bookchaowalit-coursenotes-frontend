@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Mono, DM_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -11,8 +12,10 @@ const studyDisplay = Newsreader({ variable: "--font-study-display", subsets: ["l
 export const metadata: Metadata = {
   title: "Field Notes — Course study archive",
   description: "A personal archive of course notes, topics, sources, and study details.",
-  metadataBase: new URL("https://coursenotes.bookchaowalit.com"),
-  alternates: { canonical: "https://coursenotes.bookchaowalit.com" },
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", url: "/", siteName: "Field Notes", title: "Field Notes — Course study archive", description: "A personal archive of course notes, topics, sources, and study details." },
+  twitter: { card: "summary", creator: "@bookchaowalit" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

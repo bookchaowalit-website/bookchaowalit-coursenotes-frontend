@@ -1,7 +1,7 @@
 import Link from "next/link";
-import type { CourseNote } from "@/lib/mdx";
+import type { CourseNoteSummary } from "@/lib/course-notes";
 
-export function NoteCard({ note, index }: { note: CourseNote; index: number }) {
+export function NoteCard({ note, index }: { note: CourseNoteSummary; index: number }) {
   return (
     <Link className="note-entry" href={"/course-notes/" + note.slug}>
       <span className="note-number">{String(index + 1).padStart(2, "0")}</span>
@@ -18,7 +18,7 @@ export function NoteCard({ note, index }: { note: CourseNote; index: number }) {
   );
 }
 
-export function NoteIndex({ notes, title, description }: { notes: CourseNote[]; title: string; description: string }) {
+export function NoteIndex({ notes, title, description }: { notes: CourseNoteSummary[]; title: string; description: string }) {
   return (
     <section className="note-index" aria-labelledby="note-index-heading">
       <header className="index-heading">
@@ -31,4 +31,3 @@ export function NoteIndex({ notes, title, description }: { notes: CourseNote[]; 
     </section>
   );
 }
-
