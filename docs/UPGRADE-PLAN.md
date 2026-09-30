@@ -12,7 +12,6 @@ searchable/filterable, MCP tools are real, and CI guards lint/types/tests/build.
 
 ### P1
 - Confirm canonical domain; set `NEXT_PUBLIC_SITE_URL`.
-- Refresh `PRODUCT.md` ("Source README excerpt" still quotes create-next-app).
 - Syntax highlighting for fenced code blocks (e.g. `rehype-pretty-code`),
   once notes contain code.
 
@@ -31,3 +30,6 @@ searchable/filterable, MCP tools are real, and CI guards lint/types/tests/build.
 - Replaced sample-data `/api/mcp` with real note tools.
 - Archive search + topic filter; home topic index links to filtered archive;
   per-note metadata; full sitemap; CI; README rewritten.
+
+## Done in this pass (pass 2)
+- `PRODUCT.md`: dropped the broken create-next-app "Source README excerpt" (its open code fence swallowed the rest of the brief); points to README/CI checks instead.
