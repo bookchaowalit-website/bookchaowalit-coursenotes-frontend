@@ -33,3 +33,12 @@ searchable/filterable, MCP tools are real, and CI guards lint/types/tests/build.
 
 ## Done in this pass (pass 2)
 - `PRODUCT.md`: dropped the broken create-next-app "Source README excerpt" (its open code fence swallowed the rest of the brief); points to README/CI checks instead.
+
+## Done in this pass (pass 3)
+- Edge-case pass on `normalizeDate` in `lib/course-notes.ts` (regression tests
+  in `tests/course-notes.test.ts`):
+  - Frontmatter dates went through `Date.parse` + `toISOString()`, so a local
+    midnight ("2024-03-05T00:00", "March 5, 2024") built in Asia/Bangkok was
+    published as **2024-03-04**. The written calendar day is now kept.
+  - Impossible dates rolled over (`2024-02-30` -> `2024-03-01`); now rejected.
+  - Bare numbers were guessed by the engine (`"5"` -> 2001-05-01); now rejected.

@@ -31,11 +31,36 @@ function text(value: unknown, fallback = ""): string {
   return typeof value === "string" && value.trim() ? value.trim() : fallback;
 }
 
+function pad(value: number, width = 2): string {
+  return String(value).padStart(width, "0");
+}
+
+function isCalendarDate(year: number, month: number, day: number): boolean {
+  return month >= 1 && month <= 12 && day >= 1 && day <= new Date(Date.UTC(year, month, 0)).getUTCDate();
+}
+
+/**
+ * Normalise a frontmatter date to YYYY-MM-DD as the author wrote it.
+ *
+ * - ISO-style values keep their calendar date: "2024-03-05T00:00" is not
+ *   shifted to 2024-03-04 by a UTC conversion in UTC+ zones such as Bangkok.
+ * - Impossible dates ("2024-02-30") are rejected instead of rolling over into
+ *   March.
+ * - Other strings must at least contain a 4-digit year, so the JS engine
+ *   cannot guess "5" into 2001-05-01; their local calendar date is used.
+ */
 export function normalizeDate(value: unknown): string {
   const raw = text(value);
   if (!raw) return "";
-  const parsed = Date.parse(raw);
-  return Number.isNaN(parsed) ? "" : new Date(parsed).toISOString().slice(0, 10);
+  const iso = /^(\d{4})-(\d{2})-(\d{2})(?:$|[T ])/.exec(raw);
+  if (iso) {
+    const [, y, m, d] = iso;
+    return isCalendarDate(Number(y), Number(m), Number(d)) ? `${y}-${m}-${d}` : "";
+  }
+  if (!/\d{4}/.test(raw)) return "";
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) return "";
+  return `${pad(parsed.getFullYear(), 4)}-${pad(parsed.getMonth() + 1)}-${pad(parsed.getDate())}`;
 }
 
 export function buildNote(slug: string, data: Record<string, unknown>, content: string): CourseNote {

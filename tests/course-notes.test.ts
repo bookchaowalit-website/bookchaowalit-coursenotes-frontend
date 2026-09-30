@@ -39,3 +39,28 @@ describe("course note model", () => {
     assert.equal(isValidSlug("../secret"), false);
   });
 });
+
+describe("normalizeDate edge cases", () => {
+  it("keeps the written calendar day in UTC+ zones such as Asia/Bangkok", () => {
+    const previous = process.env.TZ;
+    process.env.TZ = "Asia/Bangkok";
+    try {
+      assert.equal(normalizeDate("2024-03-05T00:00"), "2024-03-05");
+      assert.equal(normalizeDate("March 5, 2024"), "2024-03-05");
+      assert.equal(normalizeDate(new Date("2024-03-05")), "2024-03-05");
+    } finally {
+      process.env.TZ = previous;
+    }
+  });
+
+  it("rejects impossible dates instead of rolling them into the next month", () => {
+    assert.equal(normalizeDate("2024-02-30"), "");
+    assert.equal(normalizeDate("2023-02-29"), "");
+    assert.equal(normalizeDate("2024-02-29"), "2024-02-29");
+  });
+
+  it("does not let the engine guess a year from a bare number", () => {
+    assert.equal(normalizeDate("5"), "");
+    assert.equal(normalizeDate("12"), "");
+  });
+});
