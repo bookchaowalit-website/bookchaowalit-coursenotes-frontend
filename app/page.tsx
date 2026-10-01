@@ -1,10 +1,11 @@
 import { getAllCourseNotes } from "@/lib/mdx";
 import { NoteIndex } from "@/components/course-note-ui";
 import Link from "next/link";
+import { toSummary, topicCounts } from "@/lib/course-notes";
 
 export default async function Home() {
   const notes = await getAllCourseNotes();
-  const topics = [...new Set(notes.map((note) => note.topic))];
+  const topics = topicCounts(notes);
 
   return (
     <main className="study-atlas">
@@ -26,12 +27,12 @@ export default async function Home() {
           </aside>
         </section>
         <div className="atlas-content">
-          <aside className="topic-rail" aria-label="Topics">
+          <nav className="topic-rail" aria-label="Topics">
             <span className="rail-heading">Topic index</span>
-            {topics.map((topic) => <span className="topic-row" key={topic}><span>{topic}</span><span>{notes.filter((note) => note.topic === topic).length}</span></span>)}
+            {topics.map(({ topic, count }) => <Link className="topic-row" key={topic} href={`/course-notes?topic=${encodeURIComponent(topic)}`}><span>{topic}</span><span>{count}<span className="sr-only"> notes</span></span></Link>)}
             <p className="rail-note">Each entry keeps its source course, platform, level, and date beside the notes.</p>
-          </aside>
-          <NoteIndex notes={notes.slice(0, 6)} title="Recent study" description="Start with the newest note, then follow a topic or course into the full shelf." />
+          </nav>
+          <NoteIndex notes={notes.slice(0, 6).map(toSummary)} title="Recent study" description="Start with the newest note, then follow a topic or course into the full shelf." />
         </div>
         <footer className="atlas-footer">The archive is local content in MDX. It does not claim a course completion record or replace the original source.</footer>
       </div>
